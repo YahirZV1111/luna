@@ -108,6 +108,20 @@
             <p id="error-message" class="text-red-500 mt-3 hidden"></p>
         </div>
 
+<!-- TABLA + NUEVOS BOTONES DE EXPORTACIÓN/IMPORTACIÓN -->
+<div class="bg-white p-6 rounded-xl shadow-lg overflow-x-auto">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-xl font-semibold text-gray-800">Lista de Proyectos Registrados</h2>
+<div class="space-x-2">
+<button id="exportExcelBtn" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg shadow">Exportar Excel</button>
+<button id="exportCsvBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg shadow">Exportar CSV</button>
+<button id="importBtn" class="bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded-lg shadow">Importar Archivo</button>
+<button id="syncBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-lg shadow">Sincronizar</button>
+<input type="file" id="fileInput" accept=".csv, .xlsx" class="hidden" />
+</div>
+</div>
+
+
         <!-- Tabla de Proyectos (Lista) -->
         <div class="bg-white p-6 rounded-xl shadow-lg overflow-x-auto">
             <h2 class="text-xl font-semibold text-gray-800 mb-4">Lista de Proyectos Registrados</h2>
@@ -137,6 +151,8 @@
         <div class="mt-4 text-sm text-gray-600">
             <p>ID de Usuario (para compartir): <span id="userIdDisplay" class="font-mono bg-gray-200 p-1 rounded-md text-xs">Cargando...</span></p>
         </div>
+
+                        <a id="downloadLink" class="hidden"></a>
 
         <!-- Modal de Confirmación para Eliminar (Custom Modal) -->
         <div id="deleteModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
@@ -415,6 +431,121 @@
             clear: function(){ localStorage.removeItem(STORAGE_KEY); renderProjects(); }
         };
     })();
+
+    const STORAGE_KEY = "proyectos_fabricacion_local_v1";
+
+
+function cargarProyectos() {
+const data = localStorage.getItem(STORAGE_KEY);
+return data ? JSON.parse(data) : [];
+}
+
+
+function guardarProyectos(lista) {
+localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
+}
+
+
+function exportarCSV() {
+const proyectos = cargarProyectos();
+if (proyectos.length === 0) return alert("No hay datos para exportar.");
+
+
+const encabezados = Object.keys(proyectos[0]).join(",");
+const filas = proyectos.map(p => Object.values(p).map(v => `"${v}"`).join(",")).join("
+");
+const contenido = encabezados + "
+" + filas;
+
+
+const blob = new Blob([contenido], { type: "text/csv" });
+const url = URL.createObjectURL(blob);
+
+
+const a = document.getElementById("downloadLink");
+a.href = url;
+a.download = "proyectos.csv";
+a.click();
+}
+
+function exportarExcel() {
+const proyectos = cargarProyectos();
+if (proyectos.length === 0) return alert("No hay datos para exportar.");
+
+
+let xml = `<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet">
+<Worksheet ss:Name="Proyectos">
+<Table>`;
+
+
+const headers = Object.keys(proyectos[0]);
+xml += "<Row>" + headers.map(h => `<Cell><Data ss:Type="String">${h}</Data></Cell>`).join("") + "</Row>";
+
+
+proyectos.forEach(p => {
+xml += "<Row>" + Object.values(p).map(v => `<Cell><Data ss:Type="String">${v}</Data></Cell>`).join("") + "</Row>`;
+});
+
+
+xml += "</Table></Worksheet></Workbook>";
+
+
+const blob = new Blob([xml], { type: "application/vnd.ms-excel" });
+const url = URL.createObjectURL(blob);
+
+
+const a = document.getElementById("downloadLink");
+a.href = url;
+a.download = "proyectos.xls";
+a.click();
+}
+
+async function importarCSV(texto) {
+const lineas = texto.trim().split(/
+?
+/);
+const headers = lineas.shift().split(",").map(h => h.replace(/\"/g, ""));
+
+
+const proyectos = lineas.map(l => {
+const cols = l.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
+const obj = {};
+headers.forEach((h, i) => {
+obj[h] = cols[i].replace(/\"/g, "").trim();
+});
+return obj;
+});
+
+
+guardarProyectos(proyectos);
+location.reload();
+}
+
+document.getElementById("importBtn").addEventListener("click", () =>{
+document.getElementById("fileInput").click();
+});
+
+
+document.getElementById("fileInput").addEventListener("change", async (e) => {
+const file = e.target.files[0];
+if (!file) return;
+
+
+if (file.name.endsWith(".csv")) {
+const text = await file.text();
+importarCSV(text);
+} else {
+alert("Solo se admite CSV por ahora.");
+}
+});
+
+
+
+document.getElementById("exportExcelBtn").addEventListener("click", exportarExcel);
+document.getElementById("exportCsvBtn").addEventListener("click", exportarCSV);
+document.getElementById("syncBtn").addEventListener("click", () => alert("Sincronización futura con nube."));
+
 
 </script>
 </body>
