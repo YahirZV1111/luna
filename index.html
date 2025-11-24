@@ -11,8 +11,15 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
+            background-color: #e0e0e0;
         }
+
+      
+        /* Restaurar color de texto dentro de los campos (inputs, selects, textarea) */
+        input, select, textarea, .block{
+            color: #000205; /* equivalente a Tailwind text-gray-900 (texto oscuro) */
+        }
+   
     </style>
 </head>
 <body class="p-4 md:p-8">
@@ -44,6 +51,13 @@
                     <input type="text" id="marca" placeholder="Ej: ov-1, wt3"
                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
                 </div>
+
+                <!-- CANTIDAD (nuevo campo) -->
+                <div class="col-span-full md:col-span-1">
+                    <label for="cantidad" class="block text-sm font-medium text-black-700">CANTIDAD</label>
+                    <input type="number" id="cantidad" placeholder="Ej: 10" min="0"
+                           class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
                 
                 <!-- HABILITADO - Usaremos una lista desplegable simple con la opción "OK" y "PENDIENTE" -->
                 <div class="col-span-full lg:col-span-1">
@@ -71,6 +85,8 @@
                         <option value="OK">OK</option>
                     </select>
                 </div>
+
+                
 
                 <!-- LIBERADO -->
                 <div>
@@ -103,6 +119,7 @@
                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Proyecto</th>
                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Marca</th>
+                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cantidad</th>
                         <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Habilitado</th>
                         <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Armado</th>
                         <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Soldadura</th>
@@ -232,7 +249,7 @@
         function renderProjects() {
             const projects = loadProjects();
             if (!projects || projects.length === 0) {
-                projectsTableBody.innerHTML = `<tr><td colspan="9" class="p-4 text-center text-gray-500">No hay proyectos registrados aún.</td></tr>`;
+                projectsTableBody.innerHTML = `<tr><td colspan="10" class="p-4 text-center text-gray-500">No hay proyectos registrados aún.</td></tr>`;
                 if (loadingElement) loadingElement.classList.add('hidden');
                 return;
             }
@@ -248,6 +265,7 @@
                     <td class="px-3 py-3 whitespace-nowrap font-medium text-gray-900">${escapeHtml(project.nombre || '')}</td>
                     <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-500">${escapeHtml(project.descripcion || '')}</td>
                     <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-500">${escapeHtml(project.marca || '')}</td>
+                    <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-500">${escapeHtml(String(project.cantidad !== undefined ? project.cantidad : ''))}</td>
 
                     <td class="px-3 py-3 whitespace-nowrap text-center">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(project.habilitado)} cursor-pointer" 
@@ -327,6 +345,8 @@
                 const nombre = document.getElementById('nombreProyecto').value.trim();
                 const descripcion = document.getElementById('descripcion').value.trim();
                 const marca = document.getElementById('marca').value.trim();
+                const cantidadVal = document.getElementById('cantidad').value.trim();
+                const cantidad = cantidadVal === '' ? '' : Number(cantidadVal);
                 const habilitado = document.getElementById('habilitado').value;
                 const armado = document.getElementById('armado').value;
                 const soldadura = document.getElementById('soldadura').value;
@@ -345,6 +365,7 @@
                     nombre,
                     descripcion,
                     marca,
+                    cantidad,
                     habilitado,
                     armado,
                     soldadura,
