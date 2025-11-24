@@ -4,22 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seguimiento de Proyectos de Fabricación</title>
-    <!-- Carga de Tailwind CSS para el estilo -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Configuración de la fuente Inter -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
             background-color: #e0e0e0;
         }
-
-
-        /* Restaurar color de texto dentro de los campos (inputs, selects, textarea) */
-        input, select, textarea, .block{
-            color: #000205; /* equivalente a Tailwind text-gray-900 (texto oscuro) */
+        input, select, textarea, .block {
+            color: #000205;
         }
-
     </style>
 </head>
 <body class="p-4 md:p-8">
@@ -31,35 +25,30 @@
             <h2 class="text-xl font-semibold text-indigo-700 mb-4">Ingresar Nuevo Proyecto</h2>
             <form id="projectForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
-                <!-- NOMBRE DEL PROYECTO -->
                 <div class="col-span-full md:col-span-1">
                     <label for="nombreProyecto" class="block text-sm font-medium text-gray-700">NOMBRE DEL PROYECTO</label>
                     <input type="text" id="nombreProyecto" placeholder="Ej: ARCILLA, OVERLAND" required
                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
                 </div>
 
-                <!-- DESCRIPCION -->
                 <div class="col-span-full md:col-span-1">
-                    <label for="descripcion" class="block text-sm font-medium text-gray-700">DESCRIPCION</label>
+                    <label for="descripcion" class="block text-sm font-medium text-gray-700">DESCRIPCIÓN</label>
                     <input type="text" id="descripcion" placeholder="Ej: viga de 1/1, placa de 1/4" required
                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
                 </div>
 
-                <!-- MARCA -->
                 <div class="col-span-full md:col-span-1">
                     <label for="marca" class="block text-sm font-medium text-gray-700">MARCA</label>
                     <input type="text" id="marca" placeholder="Ej: ov-1, wt3"
                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
                 </div>
 
-                <!-- CANTIDAD (nuevo campo) -->
                 <div class="col-span-full md:col-span-1">
-                    <label for="cantidad" class="block text-sm font-medium text-black-700">CANTIDAD</label>
+                    <label for="cantidad" class="block text-sm font-medium text-gray-700">CANTIDAD</label>
                     <input type="number" id="cantidad" placeholder="Ej: 10" min="0"
                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
                 </div>
 
-                <!-- HABILITADO - Usaremos una lista desplegable simple con la opción "OK" y "PENDIENTE" -->
                 <div class="col-span-full lg:col-span-1">
                     <label for="habilitado" class="block text-sm font-medium text-gray-700">HABILITADO</label>
                     <select id="habilitado" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
@@ -68,7 +57,6 @@
                     </select>
                 </div>
 
-                <!-- ARMADO -->
                 <div>
                     <label for="armado" class="block text-sm font-medium text-gray-700">ARMADO</label>
                     <select id="armado" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
@@ -77,7 +65,6 @@
                     </select>
                 </div>
 
-                <!-- SOLDADURA -->
                 <div>
                     <label for="soldadura" class="block text-sm font-medium text-gray-700">SOLDADURA</label>
                     <select id="soldadura" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
@@ -86,9 +73,6 @@
                     </select>
                 </div>
 
-
-
-                <!-- LIBERADO -->
                 <div>
                     <label for="liberado" class="block text-sm font-medium text-gray-700">LIBERADO</label>
                     <select id="liberado" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
@@ -97,7 +81,6 @@
                     </select>
                 </div>
 
-                <!-- Botón de Guardar -->
                 <div class="col-span-full flex items-end">
                     <button type="submit" id="saveButton"
                             class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 px-4 rounded-lg shadow-md transition duration-150 ease-in-out disabled:bg-indigo-400">
@@ -108,23 +91,20 @@
             <p id="error-message" class="text-red-500 mt-3 hidden"></p>
         </div>
 
-<!-- TABLA + NUEVOS BOTONES DE EXPORTACIÓN/IMPORTACIÓN -->
-<div class="bg-white p-6 rounded-xl shadow-lg overflow-x-auto">
-<div class="flex justify-between items-center mb-4">
-<h2 class="text-xl font-semibold text-gray-800">Lista de Proyectos Registrados</h2>
-<div class="space-x-2">
-<button id="exportExcelBtn" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg shadow">Exportar Excel</button>
-<button id="exportCsvBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg shadow">Exportar CSV</button>
-<button id="importBtn" class="bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded-lg shadow">Importar Archivo</button>
-<button id="syncBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-lg shadow">Sincronizar</button>
-<input type="file" id="fileInput" accept=".csv, .xlsx" class="hidden" />
-</div>
-</div>
-
-
-        <!-- Tabla de Proyectos (Lista) -->
+        <!-- TABLA + BOTONES DE EXPORTACIÓN/IMPORTACIÓN -->
         <div class="bg-white p-6 rounded-xl shadow-lg overflow-x-auto">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Lista de Proyectos Registrados</h2>
+            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                <h2 class="text-xl font-semibold text-gray-800">Lista de Proyectos Registrados</h2>
+                <div class="space-x-2">
+                    <button id="exportExcelBtn" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg shadow">Exportar Excel</button>
+                    <button id="exportCsvBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg shadow">Exportar CSV</button>
+                    <button id="importBtn" class="bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded-lg shadow">Importar CSV</button>
+                </div>
+            </div>
+            
+            <input type="file" id="fileInput" accept=".csv" class="hidden" />
+            <a id="downloadLink" class="hidden"></a>
+
             <div id="loading" class="text-center text-indigo-500 py-4">Cargando proyectos...</div>
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
@@ -142,19 +122,15 @@
                     </tr>
                 </thead>
                 <tbody id="projectsTableBody" class="bg-white divide-y divide-gray-200">
-                    <!-- Los proyectos se insertarán aquí -->
                 </tbody>
             </table>
         </div>
 
-        <!-- Mostrar ID de Usuario para referencia (MANDATORY) -->
         <div class="mt-4 text-sm text-gray-600">
-            <p>ID de Usuario (para compartir): <span id="userIdDisplay" class="font-mono bg-gray-200 p-1 rounded-md text-xs">Cargando...</span></p>
+            <p>ID de Usuario (para referencia): <span id="userIdDisplay" class="font-mono bg-gray-200 p-1 rounded-md text-xs">local-user</span></p>
         </div>
 
-                        <a id="downloadLink" class="hidden"></a>
-
-        <!-- Modal de Confirmación para Eliminar (Custom Modal) -->
+        <!-- Modal de Confirmación para Eliminar -->
         <div id="deleteModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
             <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
                 <div class="mt-3 text-center">
@@ -173,41 +149,31 @@
                 </div>
             </div>
         </div>
-
     </div>
 
-
-
-
-
-    <!-- Script de Firebase (MODULOS) -->
     <script>
-
-    // LOCAL STORAGE IMPLEMENTATION (replaces Firebase)
     (function(){
-        // Storage key
         const STORAGE_KEY = "proyectos_fabricacion_local_v1";
-
-        // Simulate a user id for display purposes
-        const userId = "local-user";
-        const userIdDisplay = document.getElementById('userIdDisplay');
-        if (userIdDisplay) userIdDisplay.textContent = userId;
 
         // DOM elements
         const projectsTableBody = document.getElementById('projectsTableBody');
         const projectForm = document.getElementById('projectForm');
-        const saveButton = document.getElementById('saveButton');
         const loadingElement = document.getElementById('loading');
         const errorMessageElement = document.getElementById('error-message');
         const deleteModal = document.getElementById('deleteModal');
         const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
         const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+        const exportExcelBtn = document.getElementById('exportExcelBtn');
+        const exportCsvBtn = document.getElementById('exportCsvBtn');
+        const importBtn = document.getElementById('importBtn');
+        const fileInput = document.getElementById('fileInput');
+        const downloadLink = document.getElementById('downloadLink');
 
         let projectIdToDelete = null;
 
         // Utility: generate ID
         function generateId() {
-            return 'p_' + Math.random().toString(36).substr(2,9);
+            return 'p_' + Math.random().toString(36).substr(2,9) + Date.now();
         }
 
         // Utility: format date ISO -> readable
@@ -240,7 +206,7 @@
         // Add project
         function addProject(project) {
             const projects = loadProjects();
-            projects.unshift(project); // newest first
+            projects.unshift(project);
             saveProjects(projects);
             renderProjects();
         }
@@ -275,6 +241,7 @@
             }
             if (loadingElement) loadingElement.classList.add('hidden');
             projectsTableBody.innerHTML = '';
+            
             projects.forEach(project => {
                 const date = project.fechaCreacion ? formatDate(project.fechaCreacion) : 'N/A';
                 const getStatusClass = (status) => status === 'OK' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
@@ -286,35 +253,30 @@
                     <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-500">${escapeHtml(project.descripcion || '')}</td>
                     <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-500">${escapeHtml(project.marca || '')}</td>
                     <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-500">${escapeHtml(String(project.cantidad !== undefined ? project.cantidad : ''))}</td>
-
                     <td class="px-3 py-3 whitespace-nowrap text-center">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(project.habilitado)} cursor-pointer" 
                               data-field="habilitado" data-id="${project.id}">
                             ${project.habilitado || 'PENDIENTE'}
                         </span>
                     </td>
-
                     <td class="px-3 py-3 whitespace-nowrap text-center">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(project.armado)}" 
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(project.armado)} cursor-pointer" 
                               data-field="armado" data-id="${project.id}">
                             ${project.armado || 'PENDIENTE'}
                         </span>
                     </td>
-
                     <td class="px-3 py-3 whitespace-nowrap text-center">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(project.soldadura)}" 
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(project.soldadura)} cursor-pointer" 
                               data-field="soldadura" data-id="${project.id}">
                             ${project.soldadura || 'PENDIENTE'}
                         </span>
                     </td>
-
                     <td class="px-3 py-3 whitespace-nowrap text-center">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(project.liberado)}" 
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(project.liberado)} cursor-pointer" 
                               data-field="liberado" data-id="${project.id}">
                             ${project.liberado || 'PENDIENTE'}
                         </span>
                     </td>
-
                     <td class="px-3 py-3 whitespace-nowrap text-center text-sm font-medium">
                         <button data-id="${project.id}" class="delete-btn text-red-600 hover:text-red-900 transition duration-150 p-1 rounded-full hover:bg-red-100">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -419,134 +381,112 @@
             projectIdToDelete = null;
         }
 
-        // Initialize render
-        document.addEventListener('DOMContentLoaded', () => {
+        // ========== EXPORT / IMPORT FUNCTIONS ==========
+        
+        function exportarCSV() {
+            const proyectos = loadProjects();
+            if (proyectos.length === 0) {
+                alert("No hay datos para exportar.");
+                return;
+            }
+
+            const encabezados = Object.keys(proyectos[0]).join(",");
+            const filas = proyectos.map(p => Object.values(p).map(v => `"${v}"`).join(",")).join("\n");
+            const contenido = encabezados + "\n" + filas;
+
+            const blob = new Blob([contenido], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+
+            downloadLink.href = url;
+            downloadLink.download = "proyectos_" + new Date().toISOString().split('T')[0] + ".csv";
+            downloadLink.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportarExcel() {
+            const proyectos = loadProjects();
+            if (proyectos.length === 0) {
+                alert("No hay datos para exportar.");
+                return;
+            }
+
+            let xml = `<?xml version="1.0"?>\n<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet">\n<Worksheet ss:Name="Proyectos">\n<Table>`;
+
+            const headers = Object.keys(proyectos[0]);
+            xml += "<Row>" + headers.map(h => `<Cell><Data ss:Type="String">${h}</Data></Cell>`).join("") + "</Row>";
+
+            proyectos.forEach(p => {
+                xml += "<Row>" + Object.values(p).map(v => `<Cell><Data ss:Type="String">${v}</Data></Cell>`).join("") + "</Row>";
+            });
+
+            xml += "</Table></Worksheet></Workbook>";
+
+            const blob = new Blob([xml], { type: "application/vnd.ms-excel" });
+            const url = URL.createObjectURL(blob);
+
+            downloadLink.href = url;
+            downloadLink.download = "proyectos_" + new Date().toISOString().split('T')[0] + ".xls";
+            downloadLink.click();
+            URL.revokeObjectURL(url);
+        }
+
+        async function importarCSV(texto) {
+            const lineas = texto.trim().split(/\r?\n/);
+            if (lineas.length === 0) {
+                alert("El archivo CSV está vacío.");
+                return;
+            }
+
+            const headers = lineas[0].split(",").map(h => h.replace(/"/g, "").trim());
+            
+            const proyectos = [];
+            for (let i = 1; i < lineas.length; i++) {
+                const cols = lineas[i].split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
+                const obj = {};
+                headers.forEach((h, idx) => {
+                    obj[h] = cols[idx] ? cols[idx].replace(/"/g, "").trim() : "";
+                });
+                proyectos.push(obj);
+            }
+
+            saveProjects(proyectos);
             renderProjects();
-        });
+            alert(`Se importaron ${proyectos.length} proyectos correctamente.`);
+        }
 
-        // Expose some functions for debugging (optional)
-        window._proyectos_local = {
-            load: loadProjects,
-            save: saveProjects,
-            clear: function(){ localStorage.removeItem(STORAGE_KEY); renderProjects(); }
-        };
+        // Event listeners for export/import buttons
+        if (exportExcelBtn) {
+            exportExcelBtn.addEventListener("click", exportarExcel);
+        }
+        
+        if (exportCsvBtn) {
+            exportCsvBtn.addEventListener("click", exportarCSV);
+        }
+        
+        if (importBtn) {
+            importBtn.addEventListener("click", () => {
+                fileInput.click();
+            });
+        }
+
+        if (fileInput) {
+            fileInput.addEventListener("change", async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                if (file.name.endsWith(".csv")) {
+                    const text = await file.text();
+                    importarCSV(text);
+                    fileInput.value = ''; // Reset input
+                } else {
+                    alert("Solo se admite formato CSV.");
+                }
+            });
+        }
+
+        // Initialize render on page load
+        renderProjects();
     })();
-
-    const STORAGE_KEY = "proyectos_fabricacion_local_v1";
-
-
-function cargarProyectos() {
-const data = localStorage.getItem(STORAGE_KEY);
-return data ? JSON.parse(data) : [];
-}
-
-
-function guardarProyectos(lista) {
-localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
-}
-
-
-function exportarCSV() {
-const proyectos = cargarProyectos();
-if (proyectos.length === 0) return alert("No hay datos para exportar.");
-
-
-const encabezados = Object.keys(proyectos[0]).join(",");
-const filas = proyectos.map(p => Object.values(p).map(v => `"${v}"`).join(",")).join("
-");
-const contenido = encabezados + "
-" + filas;
-
-
-const blob = new Blob([contenido], { type: "text/csv" });
-const url = URL.createObjectURL(blob);
-
-
-const a = document.getElementById("downloadLink");
-a.href = url;
-a.download = "proyectos.csv";
-a.click();
-}
-
-function exportarExcel() {
-const proyectos = cargarProyectos();
-if (proyectos.length === 0) return alert("No hay datos para exportar.");
-
-
-let xml = `<?xml version="1.0"?>
-<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet">
-<Worksheet ss:Name="Proyectos">
-<Table>`;
-
-
-const headers = Object.keys(proyectos[0]);
-xml += "<Row>" + headers.map(h => `<Cell><Data ss:Type="String">${h}</Data></Cell>`).join("") + "</Row>";
-
-
-proyectos.forEach(p => {
-xml += "<Row>" + Object.values(p).map(v => `<Cell><Data ss:Type="String">${v}</Data></Cell>`).join("") + "</Row>`;
-});
-
-
-xml += "</Table></Worksheet></Workbook>";
-
-
-const blob = new Blob([xml], { type: "application/vnd.ms-excel" });
-const url = URL.createObjectURL(blob);
-
-
-const a = document.getElementById("downloadLink");
-a.href = url;
-a.download = "proyectos.xls";
-a.click();
-}
-
-async function importarCSV(texto) {
-const lineas = texto.trim().split(/
-?
-/);
-const headers = lineas.shift().split(",").map(h => h.replace(/\"/g, ""));
-
-
-const proyectos = lineas.map(l => {
-const cols = l.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
-const obj = {};
-headers.forEach((h, i) => {
-obj[h] = cols[i].replace(/\"/g, "").trim();
-});
-return obj;
-});
-
-
-guardarProyectos(proyectos);
-location.reload();
-}
-
-document.getElementById("importBtn").addEventListener("click", () =>{
-document.getElementById("fileInput").click();
-});
-
-
-document.getElementById("fileInput").addEventListener("change", async (e) => {
-const file = e.target.files[0];
-if (!file) return;
-
-
-if (file.name.endsWith(".csv")) {
-const text = await file.text();
-importarCSV(text);
-} else {
-alert("Solo se admite CSV por ahora.");
-}
-});
-
-
-
-document.getElementById("exportExcelBtn").addEventListener("click", exportarExcel);
-document.getElementById("exportCsvBtn").addEventListener("click", exportarCSV);
-document.getElementById("syncBtn").addEventListener("click", () => alert("Sincronización futura con nube."));
-
-
-</script>
+    </script>
 </body>
 </html>
