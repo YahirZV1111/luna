@@ -49,6 +49,38 @@
                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
                 </div>
 
+                <!-- APARTADO DEFECTOS (n contadores) -->
+                <fieldset class="col-span-full md:col-span-2 border rounded-md p-3">
+                    <legend class="text-sm font-medium text-gray-700 mb-2">Defectos (contadores)</legend>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div>
+                            <label for="defecto1" class="block text-xs text-gray-600">Defecto1</label>
+                            <input type="number" id="defecto1" min="0" value="0"
+                                   class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5">
+                        </div>
+                        <div>
+                            <label for="defecto2" class="block text-xs text-gray-600">Defecto2</label>
+                            <input type="number" id="defecto2" min="0" value="0"
+                                   class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5">
+                        </div>
+                        <div>
+                            <label for="defecto3" class="block text-xs text-gray-600">Defecto3</label>
+                            <input type="number" id="defecto3" min="0" value="0"
+                                   class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5">
+                        </div>
+                        <div>
+                            <label for="defecto4" class="block text-xs text-gray-600">Defecto4</label>
+                            <input type="number" id="defecto4" min="0" value="0"
+                                   class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5">
+                        </div>
+                        <div>
+                            <label for="defecto5" class="block text-xs text-gray-600">Defecto5</label>
+                            <input type="number" id="defecto5" min="0" value="0"
+                                   class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5">
+                        </div>
+                    </div>
+                </fieldset>
+
                 <div class="col-span-full lg:col-span-1">
                     <label for="habilitado" class="block text-sm font-medium text-gray-700">HABILITADO</label>
                     <select id="habilitado" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
@@ -411,6 +443,32 @@
                 const soldadura = document.getElementById('soldadura').value;
                 const liberado = document.getElementById('liberado').value;
 
+                // Leer contadores de defectos y agregar al objeto del proyecto
+                const defects = {
+                    defecto1: Number(document.getElementById('defecto1').value || 0),
+                    defecto2: Number(document.getElementById('defecto2').value || 0),
+                    defecto3: Number(document.getElementById('defecto3').value || 0),
+                    defecto4: Number(document.getElementById('defecto4').value || 0),
+                    defecto5: Number(document.getElementById('defecto5').value || 0)
+                };
+
+                const newProject = {
+                    id: generateId(),
+                    nombre,
+                    descripcion,
+                    marca,
+                    cantidad,
+                    habilitado,
+                    armado,
+                    soldadura,
+                    liberado,
+                    defects, // ahora se guardan incluso los 0
+                    fechaCreacion: new Date().toISOString(),
+                    fechaArmado: document.getElementById("fechaArmado").value || "",
+                    fechaSoldadura: document.getElementById("fechaSoldadura").value || "",
+                    fechaTaladros: document.getElementById("fechaTaladros").value || ""
+                };
+
                 if (!nombre || !descripcion) {
                     if (errorMessageElement) {
                         errorMessageElement.textContent = "Por favor completa nombre y descripción.";
@@ -418,26 +476,6 @@
                     }
                     return;
                 }
-
-             const newProject = {
-    id: generateId(),
-    nombre,
-    descripcion,
-    marca,
-    cantidad,
-    habilitado,
-    armado,
-    soldadura,
-    liberado,
-    fechaCreacion: new Date().toISOString(),
-
-    
-fechaArmado: document.getElementById("fechaArmado").value || "",
-fechaSoldadura: document.getElementById("fechaSoldadura").value || "",
-fechaTaladros: document.getElementById("fechaTaladros").value || ""
-
-                 
-};
 
                 addProject(newProject);
                 projectForm.reset();
