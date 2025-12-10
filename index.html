@@ -415,7 +415,7 @@
                     <td class="px-3 py-3 whitespace-nowrap text-center">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(project.taladros)} cursor-pointer"
                             data-field="taladros" data-id="${project.id}">
-                            ${project.taladros}
+                            ${project.taladros || 'PENDIENTE'}
                         </span>
                         <br>
                         <span class="text-xs text-gray-400">
@@ -493,7 +493,14 @@
                .join(';');
        }
 
-
+      // Serializador genérico para export (soporta object, array, string)
+      function serializeDef(v) {
+          if (!v) return '';
+          if (typeof v === 'string') return v;
+          if (Array.isArray(v)) return v.join(';');
+          if (typeof v === 'object') return Object.entries(v).map(([k,val]) => `${k}:${val}`).join(';');
+          return String(v);
+      }
         // Toggle status when clicking on a status span
         projectsTableBody.addEventListener('click', (e) => {
             const statusTarget = e.target.closest('[data-field]');
@@ -527,6 +534,7 @@
                 const habilitado = document.getElementById('habilitado').value;
                 const armado = document.getElementById('armado').value;
                 const soldadura = document.getElementById('soldadura').value;
+                const taladros = document.getElementById('taladros').value;
                 const liberado = document.getElementById('liberado').value;
 
                 // Leer defectos como contadores por defecto (object name->count)
@@ -554,6 +562,7 @@
                     cantidad,
                     habilitado,
                     armado,
+                    taladros,
                     soldadura,
                     liberado,
                     // guardamos objetos { defecto: cantidad }
@@ -614,11 +623,11 @@
             // serializar defectos por apartado antes de exportar
             const flat = proyectos.map(p => {
                 const cp = Object.assign({}, p);
-                cp.defectos_habilitado = p.defectos_habilitado && p.defectos_habilitado.length ? p.defectos_habilitado.join(';') : '';
-                cp.defectos_armado = p.defectos_armado && p.defectos_armado.length ? p.defectos_armado.join(';') : '';
-                cp.defectos_soldadura = p.defectos_soldadura && p.defectos_soldadura.length ? p.defectos_soldadura.join(';') : '';
-                cp.defectos_taladro = p.defectos_taladro && p.defectos_taladro.length ? p.defectos_taladro.join(';') : '';
-               cp.fechaLiberado = cp.fechaLiberado || '';
+                cp.defectos_habilitado = serializeDef(p.defectos_habilitado);
+                cp.defectos_armado = serializeDef(p.defectos_armado);
+                cp.defectos_soldadura = serializeDef(p.defectos_soldadura);
+                cp.defectos_taladro = serializeDef(p.defectos_taladro);
+                cp.fechaLiberado = cp.fechaLiberado || '';
                 cp.fechaCreacion = cp.fechaCreacion || '';
                 cp.fechaArmado = cp.fechaArmado || '';
                 cp.fechaSoldadura = cp.fechaSoldadura || '';
@@ -648,10 +657,10 @@
 
             const flat = proyectos.map(p => {
                 const cp = Object.assign({}, p);
-                cp.defectos_habilitado = p.defectos_habilitado && p.defectos_habilitado.length ? p.defectos_habilitado.join(';') : '';
-                cp.defectos_armado = p.defectos_armado && p.defectos_armado.length ? p.defectos_armado.join(';') : '';
-                cp.defectos_soldadura = p.defectos_soldadura && p.defectos_soldadura.length ? p.defectos_soldadura.join(';') : '';
-                cp.defectos_taladro = p.defectos_taladro && p.defectos_taladro.length ? p.defectos_taladro.join(';') : '';
+                cp.defectos_habilitado = serializeDef(p.defectos_habilitado);
+                cp.defectos_armado = serializeDef(p.defectos_armado);
+                cp.defectos_soldadura = serializeDef(p.defectos_soldadura);
+                cp.defectos_taladro = serializeDef(p.defectos_taladro);
                 cp.fechaLiberado = cp.fechaLiberado || '';
                 cp.fechaCreacion = cp.fechaCreacion || '';
                 cp.fechaArmado = cp.fechaArmado || '';
