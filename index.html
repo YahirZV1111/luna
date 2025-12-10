@@ -125,6 +125,7 @@
                         <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Habilitado</th>
                         <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Armado</th>
                         <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Soldadura</th>
+                        <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Taladros</th>
                         <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Liberado</th>
                         <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Eliminar</th>
                     </tr>
@@ -160,6 +161,12 @@
     </div>
 
     <script>
+
+
+
+
+
+        
     (function(){
         const STORAGE_KEY = "proyectos_fabricacion_local_v1";
 
@@ -220,15 +227,22 @@
         }
 
         // Update a project field
-        function updateProject(id, field, value) {
-            const projects = loadProjects();
-            const idx = projects.findIndex(p => p.id === id);
-            if (idx === -1) return false;
-            projects[idx][field] = value;
-            saveProjects(projects);
-            renderProjects();
-            return true;
-        }
+       function updateProject(id, field, value) {
+    const projects = loadProjects();
+    const idx = projects.findIndex(p => p.id === id);
+    if (idx === -1) return false;
+
+    projects[idx][field] = value;
+
+    if(field === 'armado') projects[idx].fechaArmado = new Date().toISOString();
+    if(field === 'soldadura') projects[idx].fechaSoldadura = new Date().toISOString();
+    if(field === 'taladros') projects[idx].fechaTaladros = new Date().toISOString();
+
+    saveProjects(projects);
+    renderProjects();
+    return true;
+}
+
 
         // Delete project
         function deleteProjectLocal(id) {
@@ -273,12 +287,33 @@
                             ${project.armado || 'PENDIENTE'}
                         </span>
                     </td>
+                    <br>
+                <span class="text-xs text-gray-400">
+                ${project.fechaArmado ? formatDate(project.fechaArmado) : ''}
+                </span>
+
                     <td class="px-3 py-3 whitespace-nowrap text-center">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(project.soldadura)} cursor-pointer" 
                               data-field="soldadura" data-id="${project.id}">
                             ${project.soldadura || 'PENDIENTE'}
                         </span>
                     </td>
+                    <br>
+                    <span class="text-xs text-gray-400">
+                    ${project.fechaSoldadura ? formatDate(project.fechaSoldadura) : ''}
+                    </span>
+
+                    <td class="px-3 py-3 whitespace-nowrap text-center">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(project.taladros)} cursor-pointer" 
+                  data-field="taladros" data-id="${project.id}">
+                ${project.taladros || 'PENDIENTE'}
+                </span>
+                    </td>
+                        <br>
+                    <span class="text-xs text-gray-400">
+                ${project.fechaTaladros ? formatDate(project.fechaTaladros) : ''}
+            </span>
+
                     <td class="px-3 py-3 whitespace-nowrap text-center">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(project.liberado)} cursor-pointer" 
                               data-field="liberado" data-id="${project.id}">
@@ -350,18 +385,23 @@
                     return;
                 }
 
-                const newProject = {
-                    id: generateId(),
-                    nombre,
-                    descripcion,
-                    marca,
-                    cantidad,
-                    habilitado,
-                    armado,
-                    soldadura,
-                    liberado,
-                    fechaCreacion: new Date().toISOString()
-                };
+             const newProject = {
+    id: generateId(),
+    nombre,
+    descripcion,
+    marca,
+    cantidad,
+    habilitado,
+    armado,
+    soldadura,
+    liberado,
+    fechaCreacion: new Date().toISOString(),
+
+    // PASO 2:
+    fechaArmado: "",
+    fechaSoldadura: "",
+    fechaTaladros: ""
+};
 
                 addProject(newProject);
                 projectForm.reset();
