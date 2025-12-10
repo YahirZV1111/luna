@@ -149,6 +149,12 @@
     <label for="fechaTaladros" class="block text-sm font-medium text-gray-700">Fecha Taladros</label>
     <input type="date" id="fechaTaladros" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
 </div>
+
+<!-- NUEVO: Fecha de Liberado -->
+<div>
+    <label for="fechaLiberado" class="block text-sm font-medium text-gray-700">Fecha Liberado</label>
+    <input type="date" id="fechaLiberado" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+</div>
                 
 
                 <div>
@@ -308,6 +314,7 @@
     if(field === 'armado') projects[idx].fechaArmado = new Date().toISOString();
     if(field === 'soldadura') projects[idx].fechaSoldadura = new Date().toISOString();
     if(field === 'taladros') projects[idx].fechaTaladros = new Date().toISOString();
+    if(field === 'liberado') projects[idx].fechaLiberado = new Date().toISOString();
 
     saveProjects(projects);
     renderProjects();
@@ -386,6 +393,10 @@
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(project.liberado)} cursor-pointer" 
                               data-field="liberado" data-id="${project.id}">
                             ${project.liberado || 'PENDIENTE'}
+                        </span>
+                        <br>
+                        <span class="text-xs text-gray-400">
+                            ${project.fechaLiberado ? formatDate(project.fechaLiberado) : ''}
                         </span>
                     </td>
 
@@ -497,7 +508,8 @@
                      fechaCreacion: new Date().toISOString(),
                      fechaArmado: document.getElementById("fechaArmado").value || "",
                      fechaSoldadura: document.getElementById("fechaSoldadura").value || "",
-                     fechaTaladros: document.getElementById("fechaTaladros").value || ""
+                     fechaTaladros: document.getElementById("fechaTaladros").value || "",
+                    fechaLiberado: document.getElementById("fechaLiberado").value || ""
                  };
 
                 if (!nombre || !descripcion) {
@@ -550,12 +562,13 @@
                 cp.defectos_armado = p.defectos_armado && p.defectos_armado.length ? p.defectos_armado.join(';') : '';
                 cp.defectos_soldadura = p.defectos_soldadura && p.defectos_soldadura.length ? p.defectos_soldadura.join(';') : '';
                 cp.defectos_taladro = p.defectos_taladro && p.defectos_taladro.length ? p.defectos_taladro.join(';') : '';
-                 cp.fechaCreacion = cp.fechaCreacion || '';
-                 cp.fechaArmado = cp.fechaArmado || '';
-                 cp.fechaSoldadura = cp.fechaSoldadura || '';
-                 cp.fechaTaladros = cp.fechaTaladros || '';
-                 return cp;
-             });
+               cp.fechaLiberado = cp.fechaLiberado || '';
+                cp.fechaCreacion = cp.fechaCreacion || '';
+                cp.fechaArmado = cp.fechaArmado || '';
+                cp.fechaSoldadura = cp.fechaSoldadura || '';
+                cp.fechaTaladros = cp.fechaTaladros || '';
+                return cp;
+            });
 
             const encabezados = Object.keys(flat[0]).join(",");
             const filas = flat.map(p => Object.values(p).map(v => `"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
@@ -583,6 +596,7 @@
                 cp.defectos_armado = p.defectos_armado && p.defectos_armado.length ? p.defectos_armado.join(';') : '';
                 cp.defectos_soldadura = p.defectos_soldadura && p.defectos_soldadura.length ? p.defectos_soldadura.join(';') : '';
                 cp.defectos_taladro = p.defectos_taladro && p.defectos_taladro.length ? p.defectos_taladro.join(';') : '';
+                cp.fechaLiberado = cp.fechaLiberado || '';
                 cp.fechaCreacion = cp.fechaCreacion || '';
                 cp.fechaArmado = cp.fechaArmado || '';
                 cp.fechaSoldadura = cp.fechaSoldadura || '';
