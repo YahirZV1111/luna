@@ -49,59 +49,92 @@
                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
                 </div>
 
-                <!-- APARTADO DEFECTOS: reemplazado contadores por menús multi-select -->
-                <!-- Defectos por apartado (multi-select) -->
+                <!-- APARTADO DEFECTOS: ahora inputs numéricos por defecto (count) -->
                 <div class="col-span-full md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- DEFECTO DE HABILITADO -->
                     <div>
-                        <label for="defectosHabilitado" class="block text-sm font-medium text-gray-700">Defecto de Habilitado (multiselección)</label>
-                        <select id="defectosHabilitado" multiple size="5" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5">
-                            <option>FALTA DIMENSIONAR</option>
-                            <option>SIN IDENTIFICACION</option>
-                            <option>FALTA DE BARRENTOS</option>
-                            <option>FALTA DE LIMPIEZA</option>
-                            <option>DAÑO MCANICO EN METALES BASE</option>
-                        </select>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Defecto de Habilitado (cantidad)</label>
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">FALTA DIMENSIONAR</span>
+                                <input data-def-group="habilitado" data-def-name="FALTA DIMENSIONAR" type="number" min="0" value="0" class="w-20 p-1 border rounded" />
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">SIN IDENTIFICACION</span>
+                                <input data-def-group="habilitado" data-def-name="SIN IDENTIFICACION" type="number" min="0" value="0" class="w-20 p-1 border rounded" />
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">FALTA DE BARRENTOS</span>
+                                <input data-def-group="habilitado" data-def-name="FALTA DE BARRENTOS" type="number" min="0" value="0" class="w-20 p-1 border rounded" />
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">FALTA DE LIMPIEZA</span>
+                                <input data-def-group="habilitado" data-def-name="FALTA DE LIMPIEZA" type="number" min="0" value="0" class="w-20 p-1 border rounded" />
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">DAÑO MCANICO EN METALES BASE</span>
+                                <input data-def-group="habilitado" data-def-name="DAÑO MCANICO EN METALES BASE" type="number" min="0" value="0" class="w-20 p-1 border rounded" />
+                            </div>
+                        </div>
                     </div>
 
                     <!-- DEFECTO DE ARMADO -->
                     <div>
-                        <label for="defectosArmado" class="block text-sm font-medium text-gray-700">Defecto de Armado (multiselección)</label>
-                        <select id="defectosArmado" multiple size="4" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5">
-                            <option>FALTA DE ELEMENTOS</option>
-                            <option>PLACA CORRIDA</option>
-                            <option>MAL POSICIONADA</option>
-                            <option>GOLPE DE ARCO</option>
-                        </select>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Defecto de Armado (cantidad)</label>
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">FALTA DE ELEMENTOS</span>
+                                <input data-def-group="armado" data-def-name="FALTA DE ELEMENTOS" type="number" min="0" value="0" class="w-20 p-1 border rounded" />
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">PLACA CORRIDA</span>
+                                <input data-def-group="armado" data-def-name="PLACA CORRIDA" type="number" min="0" value="0" class="w-20 p-1 border rounded" />
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">MAL POSICIONADA</span>
+                                <input data-def-group="armado" data-def-name="MAL POSICIONADA" type="number" min="0" value="0" class="w-20 p-1 border rounded" />
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">GOLPE DE ARCO</span>
+                                <input data-def-group="armado" data-def-name="GOLPE DE ARCO" type="number" min="0" value="0" class="w-20 p-1 border rounded" />
+                            </div>
+                        </div>
                     </div>
 
                     <!-- DEFECTO DE SOLDADURA -->
                     <div>
-                        <label for="defectosSoldadura" class="block text-sm font-medium text-gray-700">Defecto de Soldadura (multiselección)</label>
-                        <select id="defectosSoldadura" multiple size="8" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5">
-                            <option>CHISPORROTEO</option>
-                            <option>DESGARE</option>
-                            <option>ESCORIA</option>
-                            <option>FALTA DE FUSION</option>
-                            <option>DESALINIAMIENTO</option>
-                            <option>TRASLAPE</option>
-                            <option>REFUERZO DE SOLDADURA INSUFISIENTE</option>
-                            <option>POROSIDAD SUSPERFICIAL</option>
-                            <option>CORDON DOBLADO / MAL ALINEADO</option>
-                            <option>CONVEXIDAD DE LA SLDADURA</option>
-                            <option>GRIETA</option>
-                            <option>SOCAVADO</option>
-                            <option>AGRIETAMIENTO</option>
-                        </select>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Defecto de Soldadura (cantidad)</label>
+                        <div class="space-y-2 max-h-56 overflow-auto pr-2">
+                            ${/* lista larga; agrega cada fila igual que abajo */''}
+                            <div class="flex items-center justify-between"><span class="text-sm">CHISPORROTEO</span><input data-def-group="soldadura" data-def-name="CHISPORROTEO" type="number" min="0" value="0" class="w-20 p-1 border rounded" /></div>
+                            <div class="flex items-center justify-between"><span class="text-sm">DESGARE</span><input data-def-group="soldadura" data-def-name="DESGARE" type="number" min="0" value="0" class="w-20 p-1 border rounded" /></div>
+                            <div class="flex items-center justify-between"><span class="text-sm">ESCORIA</span><input data-def-group="soldadura" data-def-name="ESCORIA" type="number" min="0" value="0" class="w-20 p-1 border rounded" /></div>
+                            <div class="flex items-center justify-between"><span class="text-sm">FALTA DE FUSION</span><input data-def-group="soldadura" data-def-name="FALTA DE FUSION" type="number" min="0" value="0" class="w-20 p-1 border rounded" /></div>
+                            <div class="flex items-center justify-between"><span class="text-sm">DESALINIAMIENTO</span><input data-def-group="soldadura" data-def-name="DESALINIAMIENTO" type="number" min="0" value="0" class="w-20 p-1 border rounded" /></div>
+                            <div class="flex items-center justify-between"><span class="text-sm">TRASLAPE</span><input data-def-group="soldadura" data-def-name="TRASLAPE" type="number" min="0" value="0" class="w-20 p-1 border rounded" /></div>
+                            <div class="flex items-center justify-between"><span class="text-sm">REFUERZO DE SOLDADURA INSUFISIENTE</span><input data-def-group="soldadura" data-def-name="REFUERZO DE SOLDADURA INSUFISIENTE" type="number" min="0" value="0" class="w-20 p-1 border rounded" /></div>
+                            <div class="flex items-center justify-between"><span class="text-sm">POROSIDAD SUSPERFICIAL</span><input data-def-group="soldadura" data-def-name="POROSIDAD SUSPERFICIAL" type="number" min="0" value="0" class="w-20 p-1 border rounded" /></div>
+                            <div class="flex items-center justify-between"><span class="text-sm">CORDON DOBLADO / MAL ALINEADO</span><input data-def-group="soldadura" data-def-name="CORDON DOBLADO / MAL ALINEADO" type="number" min="0" value="0" class="w-20 p-1 border rounded" /></div>
+                            <div class="flex items-center justify-between"><span class="text-sm">CONVEXIDAD DE LA SLDADURA</span><input data-def-group="soldadura" data-def-name="CONVEXIDAD DE LA SLDADURA" type="number" min="0" value="0" class="w-20 p-1 border rounded" /></div>
+                            <div class="flex items-center justify-between"><span class="text-sm">GRIETA</span><input data-def-group="soldadura" data-def-name="GRIETA" type="number" min="0" value="0" class="w-20 p-1 border rounded" /></div>
+                            <div class="flex items-center justify-between"><span class="text-sm">SOCAVADO</span><input data-def-group="soldadura" data-def-name="SOCAVADO" type="number" min="0" value="0" class="w-20 p-1 border rounded" /></div>
+                            <div class="flex items-center justify-between"><span class="text-sm">AGRIETAMIENTO</span><input data-def-group="soldadura" data-def-name="AGRIETAMIENTO" type="number" min="0" value="0" class="w-20 p-1 border rounded" /></div>
+                        </div>
                     </div>
 
                     <!-- DEFECTO DE TALADRO -->
                     <div>
-                        <label for="defectosTaladro" class="block text-sm font-medium text-gray-700">Defecto de Taladro (multiselección)</label>
-                        <select id="defectosTaladro" multiple size="2" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5">
-                            <option>TALADRO MAL DIMENSIONADO</option>
-                            <option>MAL TRAZO</option>
-                        </select>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Defecto de Taladro (cantidad)</label>
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">TALADRO MAL DIMENSIONADO</span>
+                                <input data-def-group="taladro" data-def-name="TALADRO MAL DIMENSIONADO" type="number" min="0" value="0" class="w-20 p-1 border rounded" />
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">MAL TRAZO</span>
+                                <input data-def-group="taladro" data-def-name="MAL TRAZO" type="number" min="0" value="0" class="w-20 p-1 border rounded" />
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -403,16 +436,28 @@
                     <!-- Mostrar defects agrupados por apartado -->
                     <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-600">
                         ${(() => {
-                            const parts = [];
-                            const h = project.defectos_habilitado || [];
-                            const a = project.defectos_armado || [];
-                            const s = project.defectos_soldadura || [];
-                            const t = project.defectos_taladro || [];
+                            const toEntries = (v) => {
+                                // v puede ser objeto {name:count}, string "a:1;b:2" o array
+                                if (!v) return [];
+                                if (typeof v === 'object' && !Array.isArray(v)) return Object.entries(v);
+                                if (Array.isArray(v)) return v.map(x => [x, 1]);
+                                if (typeof v === 'string' && v.includes(':')) return v.split(';').map(s => s.trim()).filter(Boolean).map(pair => {
+                                    const [k, val] = pair.split(':');
+                                    return [k ? k.trim() : '', Number(val) || 1];
+                                });
+                                return [];
+                            };
 
-                            if (h.length) parts.push(`<div class="text-xs"><strong>Habilitado:</strong> ${escapeHtml(h.join('; '))}</div>`);
-                            if (a.length) parts.push(`<div class="text-xs"><strong>Armado:</strong> ${escapeHtml(a.join('; '))}</div>`);
-                            if (s.length) parts.push(`<div class="text-xs"><strong>Soldadura:</strong> ${escapeHtml(s.join('; '))}</div>`);
-                            if (t.length) parts.push(`<div class="text-xs"><strong>Taladro:</strong> ${escapeHtml(t.join('; '))}</div>`);
+                            const h = toEntries(project.defectos_habilitado);
+                            const a = toEntries(project.defectos_armado);
+                            const s = toEntries(project.defectos_soldadura);
+                            const t = toEntries(project.defectos_taladro);
+
+                            const parts = [];
+                            if (h.length) parts.push(`<div class="text-xs"><strong>Habilitado:</strong> ${escapeHtml(h.map(([k,v])=>`${k} (${v})`).join('; '))}</div>`);
+                            if (a.length) parts.push(`<div class="text-xs"><strong>Armado:</strong> ${escapeHtml(a.map(([k,v])=>`${k} (${v})`).join('; '))}</div>`);
+                            if (s.length) parts.push(`<div class="text-xs"><strong>Soldadura:</strong> ${escapeHtml(s.map(([k,v])=>`${k} (${v})`).join('; '))}</div>`);
+                            if (t.length) parts.push(`<div class="text-xs"><strong>Taladro:</strong> ${escapeHtml(t.map(([k,v])=>`${k} (${v})`).join('; '))}</div>`);
 
                             return parts.join('');
                         })()}
@@ -484,33 +529,44 @@
                 const soldadura = document.getElementById('soldadura').value;
                 const liberado = document.getElementById('liberado').value;
 
-                // Leer contadores de defectos y agregar al objeto del proyecto
-                const defects_habilitado = Array.from(document.getElementById('defectosHabilitado').selectedOptions).map(o => o.value);
-                const defects_armado = Array.from(document.getElementById('defectosArmado').selectedOptions).map(o => o.value);
-                const defects_soldadura = Array.from(document.getElementById('defectosSoldadura').selectedOptions).map(o => o.value);
-                const defects_taladro = Array.from(document.getElementById('defectosTaladro').selectedOptions).map(o => o.value);
+                // Leer defectos como contadores por defecto (object name->count)
+                function collectDefects(groupName) {
+                    const nodes = Array.from(document.querySelectorAll(`[data-def-group="${groupName}"]`));
+                    const out = {};
+                    nodes.forEach(n => {
+                        const name = n.dataset.defName;
+                        const val = Number(n.value) || 0;
+                        if (val > 0) out[name] = val;
+                    });
+                    return out;
+                }
+
+                const defects_habilitado = collectDefects('habilitado');
+                const defects_armado = collectDefects('armado');
+                const defects_soldadura = collectDefects('soldadura');
+                const defects_taladro = collectDefects('taladro');
 
                 const newProject = {
-                     id: generateId(),
-                     nombre,
-                     descripcion,
-                     marca,
-                     cantidad,
-                     habilitado,
-                     armado,
-                     soldadura,
-                     liberado,
-                    // guardamos arrays de selecciones por apartado
+                    id: generateId(),
+                    nombre,
+                    descripcion,
+                    marca,
+                    cantidad,
+                    habilitado,
+                    armado,
+                    soldadura,
+                    liberado,
+                    // guardamos objetos { defecto: cantidad }
                     defectos_habilitado: defects_habilitado,
                     defectos_armado: defects_armado,
                     defectos_soldadura: defects_soldadura,
                     defectos_taladro: defects_taladro,
-                     fechaCreacion: new Date().toISOString(),
-                     fechaArmado: document.getElementById("fechaArmado").value || "",
-                     fechaSoldadura: document.getElementById("fechaSoldadura").value || "",
-                     fechaTaladros: document.getElementById("fechaTaladros").value || "",
+                    fechaCreacion: new Date().toISOString(),
+                    fechaArmado: document.getElementById("fechaArmado").value || "",
+                    fechaSoldadura: document.getElementById("fechaSoldadura").value || "",
+                    fechaTaladros: document.getElementById("fechaTaladros").value || "",
                     fechaLiberado: document.getElementById("fechaLiberado").value || ""
-                 };
+                };
 
                 if (!nombre || !descripcion) {
                     if (errorMessageElement) {
