@@ -173,6 +173,7 @@
                         <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Soldadura</th>
                         <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Taladros</th>
                         <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Liberado</th>
+                        <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Defectos</th>
                         <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Eliminar</th>
                     </tr>
                 </thead>
@@ -336,32 +337,17 @@
                         <span class="text-xs text-gray-400">
                             ${project.fechaArmado ? formatDate(project.fechaArmado) : ''}
                         </span>
-                        <br>
-<span class="text-xs text-gray-400">
-  ${project.fechaArmado}
-</span>
-
                     </td>
-    
-                        
                     <td class="px-3 py-3 whitespace-nowrap text-center">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(project.soldadura)} cursor-pointer"
                         data-field="soldadura" data-id="${project.id}">
                         ${project.soldadura}
                     </span>
                         <br>
-                    <span class="text-xs text-gray-400">
-                        ${project.fechaSoldadura ? formatDate(project.fechaSoldadura) : ''}
-                    </span>
-                    <br>
-<span class="text-xs text-gray-400">
-  ${project.fechaSoldadura}
-</span>
-
-                </td>
-
-                 
-
+                        <span class="text-xs text-gray-400">
+                            ${project.fechaSoldadura ? formatDate(project.fechaSoldadura) : ''}
+                        </span>
+                    </td>
                     <td class="px-3 py-3 whitespace-nowrap text-center">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(project.taladros)} cursor-pointer"
                             data-field="taladros" data-id="${project.id}">
@@ -371,21 +357,26 @@
                         <span class="text-xs text-gray-400">
                             ${project.fechaTaladros ? formatDate(project.fechaTaladros) : ''}
                         </span>
-                        <br>
-<span class="text-xs text-gray-400">
-  ${project.fechaTaladros}
-</span>
-
                     </td>
-
-                    
-
                     <td class="px-3 py-3 whitespace-nowrap text-center">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(project.liberado)} cursor-pointer" 
                               data-field="liberado" data-id="${project.id}">
                             ${project.liberado || 'PENDIENTE'}
                         </span>
                     </td>
+
+                    <!-- Mostrar defects (siempre serializa/mostrar incluso 0) -->
+                    <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-600">
+                        ${(() => {
+                            const defs = project.defects || {};
+                            // Si no hay keys, mostrar vacío
+                            if (Object.keys(defs).length === 0) return '';
+                            return Object.entries(defs)
+                                .map(([k, v]) => `<span class="inline-block mr-2 text-xs">${k.replace(/defecto/i,'Defecto ')}: ${escapeHtml(String(v))}</span>`)
+                                .join('');
+                        })()}
+                    </td>
+
                     <td class="px-3 py-3 whitespace-nowrap text-center text-sm font-medium">
                         <button data-id="${project.id}" class="delete-btn text-red-600 hover:text-red-900 transition duration-150 p-1 rounded-full hover:bg-red-100">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -407,6 +398,15 @@
               .replace(/"/g, "&quot;")
               .replace(/'/g, "&#039;");
         }
+
+       // Formatea objeto defects a string "defecto1:0;defecto2:1" (útil para export)
+       function formatDefects(defs) {
+           if (!defs || typeof defs !== 'object') return '';
+           return Object.entries(defs)
+               .map(([k, v]) => `${k}:${v}`)
+               .join(';');
+       }
+
 
         // Toggle status when clicking on a status span
         projectsTableBody.addEventListener('click', (e) => {
@@ -512,8 +512,23 @@
                 return;
             }
 
-            const encabezados = Object.keys(proyectos[0]).join(",");
-            const filas = proyectos.map(p => Object.values(p).map(v => `"${v}"`).join(",")).join("\n");
+            // serializar defects en cada proyecto antes de exportar
+            const flat = proyectos.map(p => {
+                const cp = Object.assign({}, p);
+                if (p.defects && typeof p.defects === 'object') {
+                    cp.defects = formatDefects(p.defects);
+                } else {
+                    cp.defects = '';
+                }
+                cp.fechaCreacion = cp.fechaCreacion || '';
+                cp.fechaArmado = cp.fechaArmado || '';
+                cp.fechaSoldadura = cp.fechaSoldadura || '';
+                cp.fechaTaladros = cp.fechaTaladros || '';
+                return cp;
+            });
+
+            const encabezados = Object.keys(flat[0]).join(",");
+            const filas = flat.map(p => Object.values(p).map(v => `"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
             const contenido = encabezados + "\n" + filas;
 
             const blob = new Blob([contenido], { type: "text/csv;charset=utf-8;" });
@@ -532,13 +547,27 @@
                 return;
             }
 
+            const flat = proyectos.map(p => {
+                const cp = Object.assign({}, p);
+                if (p.defects && typeof p.defects === 'object') {
+                    cp.defects = formatDefects(p.defects);
+                } else {
+                    cp.defects = '';
+                }
+                cp.fechaCreacion = cp.fechaCreacion || '';
+                cp.fechaArmado = cp.fechaArmado || '';
+                cp.fechaSoldadura = cp.fechaSoldadura || '';
+                cp.fechaTaladros = cp.fechaTaladros || '';
+                return cp;
+            });
+
             let xml = `<?xml version="1.0"?>\n<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet">\n<Worksheet ss:Name="Proyectos">\n<Table>`;
 
-            const headers = Object.keys(proyectos[0]);
+            const headers = Object.keys(flat[0]);
             xml += "<Row>" + headers.map(h => `<Cell><Data ss:Type="String">${h}</Data></Cell>`).join("") + "</Row>";
 
-            proyectos.forEach(p => {
-                xml += "<Row>" + Object.values(p).map(v => `<Cell><Data ss:Type="String">${v}</Data></Cell>`).join("") + "</Row>";
+            flat.forEach(p => {
+                xml += "<Row>" + Object.values(p).map(v => `<Cell><Data ss:Type="String">${String(v)}</Data></Cell>`).join("") + "</Row>";
             });
 
             xml += "</Table></Worksheet></Workbook>";
