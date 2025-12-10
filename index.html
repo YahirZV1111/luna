@@ -79,6 +79,20 @@
         <option value="OK">OK</option>
     </select>
 </div>
+                <div>
+    <label for="fechaArmado" class="block text-sm font-medium text-gray-700">Fecha Armado</label>
+    <input type="date" id="fechaArmado" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+</div>
+
+<div>
+    <label for="fechaSoldadura" class="block text-sm font-medium text-gray-700">Fecha Soldadura</label>
+    <input type="date" id="fechaSoldadura" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+</div>
+
+<div>
+    <label for="fechaTaladros" class="block text-sm font-medium text-gray-700">Fecha Taladros</label>
+    <input type="date" id="fechaTaladros" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+</div>
                 
 
                 <div>
@@ -290,6 +304,11 @@
                         <span class="text-xs text-gray-400">
                             ${project.fechaArmado ? formatDate(project.fechaArmado) : ''}
                         </span>
+                        <br>
+<span class="text-xs text-gray-400">
+  ${project.fechaArmado}
+</span>
+
                     </td>
     
                         
@@ -302,6 +321,11 @@
                     <span class="text-xs text-gray-400">
                         ${project.fechaSoldadura ? formatDate(project.fechaSoldadura) : ''}
                     </span>
+                    <br>
+<span class="text-xs text-gray-400">
+  ${project.fechaSoldadura}
+</span>
+
                 </td>
 
                  
@@ -315,6 +339,11 @@
                         <span class="text-xs text-gray-400">
                             ${project.fechaTaladros ? formatDate(project.fechaTaladros) : ''}
                         </span>
+                        <br>
+<span class="text-xs text-gray-400">
+  ${project.fechaTaladros}
+</span>
+
                     </td>
 
                     
@@ -406,6 +435,12 @@
     fechaArmado: "",
     fechaSoldadura: "",
     fechaTaladros: ""
+
+fechaArmado: document.getElementById("fechaArmado").value || "",
+fechaSoldadura: document.getElementById("fechaSoldadura").value || "",
+fechaTaladros: document.getElementById("fechaTaladros").value || "",
+
+                 
 };
 
                 addProject(newProject);
