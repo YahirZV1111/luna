@@ -375,6 +375,31 @@
         // Variable para almacenar proyectos actuales (para compatibilidad con código existente)
         let currentProjects = [];
 
+        // Función para migrar datos viejos de localStorage a Firestore
+        async function migrateOldData() {
+            try {
+                const oldData = localStorage.getItem(STORAGE_KEY);
+                if (oldData) {
+                    const projects = JSON.parse(oldData);
+                    console.log(`Migrando ${projects.length} proyectos antiguos a Firestore...`);
+                    
+                    for (const project of projects) {
+                        try {
+                            await addDoc(collection(db, "proyectos"), project);
+                        } catch (error) {
+                            console.error("Error migrando proyecto:", error);
+                        }
+                    }
+                    
+                    // Eliminar datos viejos después de migrar
+                    localStorage.removeItem(STORAGE_KEY);
+                    console.log("✅ Migración completada. Datos viejos eliminados.");
+                }
+            } catch (error) {
+                console.error("Error en migración:", error);
+            }
+        }
+
         // Add project to Firestore
         async function addProject(project) {
             try {
@@ -819,20 +844,28 @@
         }
 
         // Inicializar con listener en tiempo real de Firestore
-        onSnapshot(collection(db, "proyectos"), (snapshot) => {
-            currentProjects = [];
-            snapshot.forEach((docSnapshot) => {
-                currentProjects.push({ id: docSnapshot.id, ...docSnapshot.data() });
+        // Primero migrar datos viejos
+        migrateOldData().then(() => {
+            console.log("Iniciando listener de Firestore...");
+            
+            onSnapshot(collection(db, "proyectos"), (snapshot) => {
+                console.log(`📦 Firestore: ${snapshot.size} proyectos encontrados`);
+                currentProjects = [];
+                snapshot.forEach((docSnapshot) => {
+                    currentProjects.push({ id: docSnapshot.id, ...docSnapshot.data() });
+                });
+                // Ordenar por fecha de creación descendente
+                currentProjects.sort((a, b) => {
+                    const dateA = new Date(a.fechaCreacion || 0);
+                    const dateB = new Date(b.fechaCreacion || 0);
+                    return dateB - dateA;
+                });
+                renderProjects(currentProjects);
+            }, (error) => {
+                console.error("❌ Error al cargar proyectos desde Firebase:", error);
+                console.error("Código de error:", error.code);
+                console.error("Mensaje:", error.message);
             });
-            // Ordenar por fecha de creación descendente
-            currentProjects.sort((a, b) => {
-                const dateA = new Date(a.fechaCreacion || 0);
-                const dateB = new Date(b.fechaCreacion || 0);
-                return dateB - dateA;
-            });
-            renderProjects(currentProjects);
-        }, (error) => {
-            console.error("Error al cargar proyectos desde Firebase:", error);
         });
     })();
     </script>
