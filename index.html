@@ -58,10 +58,15 @@
     doc,
     onSnapshot
   };
-
+  
   // 🔎 Solo para verificar que cargó bien
   console.log("🔥 Firebase y Firestore conectados correctamente");
   console.log("✅ db disponible en window.db");
+  console.log("✅ firebaseModules disponible en window.firebaseModules");
+  
+  // Disparar evento para notificar que Firebase está listo
+  window.firebaseReady = true;
+  document.dispatchEvent(new Event('firebaseReady'));
 </script>
 
 
@@ -368,9 +373,29 @@
             }
         }
 
-        // Obtener instancia de Firestore
-        const db = window.db;
-        const { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot } = window.firebaseModules;
+        // Obtener instancia de Firestore - esperar a que esté disponible
+        let db, collection, addDoc, getDocs, updateDoc, deleteDoc, docRef, onSnapshot;
+        
+        function waitForFirebase() {
+            return new Promise((resolve) => {
+                if (window.db && window.firebaseModules) {
+                    db = window.db;
+                    ({ collection, addDoc, getDocs, updateDoc, deleteDoc, doc: docRef, onSnapshot } = window.firebaseModules);
+                    console.log("✅ Firebase destructured correctamente");
+                    resolve();
+                } else {
+                    console.log("⏳ Esperando Firebase...");
+                    setTimeout(() => waitForFirebase().then(resolve), 50);
+                }
+            });
+        }
+        
+        // Iniciar cuando Firebase esté listo
+        waitForFirebase().then(() => {
+            initializeProjectApp();
+        });
+
+        function initializeProjectApp() {
         
         // Variable para almacenar proyectos actuales (para compatibilidad con código existente)
         let currentProjects = [];
@@ -417,7 +442,7 @@
         // Update a project field in Firestore
         async function updateProject(id, field, value) {
             try {
-                const ref = doc(db, "proyectos", id);
+                const ref = docRef(db, "proyectos", id);
                 const updateData = { [field]: value };
                 
                 // Agregar fechas automáticamente según el campo
@@ -439,7 +464,7 @@
         // Delete project from Firestore
         async function deleteProjectLocal(id) {
             try {
-                await deleteDoc(doc(db, "proyectos", id));
+                await deleteDoc(docRef(db, "proyectos", id));
                 closeModal();
             } catch (error) {
                 console.error("Error al eliminar proyecto:", error);
@@ -867,7 +892,8 @@
                 console.error("Mensaje:", error.message);
             });
         });
-    })();
+        
+        } // Fin de initializeProjectApp()
     </script>
 </body>
 </html>
