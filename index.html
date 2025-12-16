@@ -16,6 +16,57 @@
         }
     </style>
 </head>
+
+<script type="module">
+  // Importar Firebase desde CDN (OBLIGATORIO en HTML)
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { 
+    getFirestore, 
+    collection, 
+    addDoc, 
+    getDocs, 
+    updateDoc, 
+    deleteDoc, 
+    doc, 
+    onSnapshot 
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // 🔥 TU CONFIGURACIÓN DE FIREBASE
+  const firebaseConfig = {
+    apiKey: "AIzaSyAoc4jHDHLOIPfZCzPqcgmGdWgpYXhIALw",
+    authDomain: "control-fabricacion-1a73c.firebaseapp.com",
+    projectId: "control-fabricacion-1a73c",
+    storageBucket: "control-fabricacion-1a73c.firebasestorage.app",
+    messagingSenderId: "773504427904",
+    appId: "1:773504427904:web:b5eb6c074244f77efc4365"
+  };
+
+  // Inicializar Firebase
+  const app = initializeApp(firebaseConfig);
+
+  // Inicializar Firestore (BASE DE DATOS)
+  const db = getFirestore(app);
+
+  // Exportar db al scope global para que otros scripts lo puedan usar
+  window.db = db;
+  window.firebaseModules = {
+    collection,
+    addDoc,
+    getDocs,
+    updateDoc,
+    deleteDoc,
+    doc,
+    onSnapshot
+  };
+
+  // 🔎 Solo para verificar que cargó bien
+  console.log("🔥 Firebase y Firestore conectados correctamente");
+  console.log("✅ db disponible en window.db");
+</script>
+
+
+
+
 <body class="p-4 md:p-8">
     <div class="max-w-6xl mx-auto">
         <h1 class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-indigo-500 pb-2">Control de Tareas de Fabricación</h1>
@@ -317,65 +368,63 @@
             }
         }
 
-        // Load projects from localStorage
-        function loadProjects() {
-            const raw = localStorage.getItem(STORAGE_KEY);
-            if (!raw) return [];
+        // Obtener instancia de Firestore
+        const db = window.db;
+        const { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot } = window.firebaseModules;
+        
+        // Variable para almacenar proyectos actuales (para compatibilidad con código existente)
+        let currentProjects = [];
+
+        // Add project to Firestore
+        async function addProject(project) {
             try {
-                return JSON.parse(raw);
-            } catch {
-                console.error("Error parseando localStorage");
-                return [];
+                await addDoc(collection(db, "proyectos"), project);
+                console.log("Proyecto guardado correctamente en Firebase");
+            } catch (error) {
+                console.error("Error al guardar proyecto en Firebase:", error);
+                if (errorMessageElement) {
+                    errorMessageElement.textContent = "Error al guardar el proyecto. Intenta de nuevo.";
+                    errorMessageElement.classList.remove('hidden');
+                }
             }
         }
 
-        // Save projects to localStorage
-        function saveProjects(projects) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+        // Update a project field in Firestore
+        async function updateProject(id, field, value) {
+            try {
+                const ref = doc(db, "proyectos", id);
+                const updateData = { [field]: value };
+                
+                // Agregar fechas automáticamente según el campo
+                if(field === 'armado') updateData.fechaArmado = new Date().toISOString();
+                if(field === 'soldadura') updateData.fechaSoldadura = new Date().toISOString();
+                if(field === 'habilitado') updateData.fechaHabilitado = new Date().toISOString();
+                if(field === 'taladros') updateData.fechaTaladros = new Date().toISOString();
+                if(field === 'liberado') updateData.fechaLiberado = new Date().toISOString();
+                
+                await updateDoc(ref, updateData);
+                return true;
+            } catch (error) {
+                console.error("Error al actualizar proyecto:", error);
+                return false;
+            }
         }
 
-        // Add project
-        function addProject(project) {
-            const projects = loadProjects();
-            projects.unshift(project);
-            saveProjects(projects);
-            renderProjects();
-        }
 
-        // Update a project field
-       function updateProject(id, field, value) {
-    const projects = loadProjects();
-    const idx = projects.findIndex(p => p.id === id);
-    if (idx === -1) return false;
-
-    projects[idx][field] = value;
-
-    if(field === 'armado') projects[idx].fechaArmado = new Date().toISOString();
-    if(field === 'soldadura') projects[idx].fechaSoldadura = new Date().toISOString();
-    if(field === 'habilitado') projects[idx].fechaHabilitado = new Date().toISOString();
-    if(field === 'taladros') projects[idx].fechaTaladros = new Date().toISOString();
-    if(field === 'liberado') projects[idx].fechaLiberado = new Date().toISOString();
-
-    saveProjects(projects);
-    renderProjects();
-    return true;
-}
-
-
-        // Delete project
-        function deleteProjectLocal(id) {
-            let projects = loadProjects();
-            projects = projects.filter(p => p.id !== id);
-            saveProjects(projects);
-            renderProjects();
-            closeModal();
+        // Delete project from Firestore
+        async function deleteProjectLocal(id) {
+            try {
+                await deleteDoc(doc(db, "proyectos", id));
+                closeModal();
+            } catch (error) {
+                console.error("Error al eliminar proyecto:", error);
+            }
         }
 
         // Render projects into the table
-        function renderProjects() {
-            const projects = loadProjects();
+        function renderProjects(projects = currentProjects) {
             if (!projects || projects.length === 0) {
-                projectsTableBody.innerHTML = `<tr><td colspan="10" class="p-4 text-center text-gray-500">No hay proyectos registrados aún.</td></tr>`;
+                projectsTableBody.innerHTML = `<tr><td colspan="12" class="p-4 text-center text-gray-500">No hay proyectos registrados aún.</td></tr>`;
                 if (loadingElement) loadingElement.classList.add('hidden');
                 return;
             }
@@ -465,10 +514,10 @@
                             const t = toEntries(project.defectos_taladro);
 
                             const parts = [];
-                            if (h.length) parts.push(`<div class="text-xs"><strong>Habilitado:</strong> ${escapeHtml(h.map(([k,v])=>`${k} (${v})`).join('; '))}</div>`);
-                            if (a.length) parts.push(`<div class="text-xs"><strong>Armado:</strong> ${escapeHtml(a.map(([k,v])=>`${k} (${v})`).join('; '))}</div>`);
-                            if (s.length) parts.push(`<div class="text-xs"><strong>Soldadura:</strong> ${escapeHtml(s.map(([k,v])=>`${k} (${v})`).join('; '))}</div>`);
-                            if (t.length) parts.push(`<div class="text-xs"><strong>Taladro:</strong> ${escapeHtml(t.map(([k,v])=>`${k} (${v})`).join('; '))}</div>`);
+                            if (h.length) parts.push(`<div class="text-xs"><strong>Habilitado:</strong> ${escapeHtml(h.map(([k,v])`${k} (${v})`).join('; '))}</div>`);
+                            if (a.length) parts.push(`<div class="text-xs"><strong>Armado:</strong> ${escapeHtml(a.map(([k,v])`${k} (${v})`).join('; '))}</div>`);
+                            if (s.length) parts.push(`<div class="text-xs"><strong>Soldadura:</strong> ${escapeHtml(s.map(([k,v])`${k} (${v})`).join('; '))}</div>`);
+                            if (t.length) parts.push(`<div class="text-xs"><strong>Taladro:</strong> ${escapeHtml(t.map(([k,v])`${k} (${v})`).join('; '))}</div>`);
 
                             return parts.join('');
                         })()}
@@ -535,7 +584,7 @@
 
         // Form submit
         if (projectForm) {
-            projectForm.addEventListener('submit', (e) => {
+            projectForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const nombre = document.getElementById('nombreProyecto').value.trim();
                 const descripcion = document.getElementById('descripcion').value.trim();
@@ -597,7 +646,8 @@
                     return;
                 }
 
-                addProject(newProject);
+                // Guardar en Firebase
+                await addDoc(collection(db, "proyectos"), newProject);
                 projectForm.reset();
                 if (errorMessageElement) errorMessageElement.classList.add('hidden');
             });
@@ -626,7 +676,7 @@
         // ========== EXPORT / IMPORT FUNCTIONS ==========
         
         function exportarCSV() {
-            const proyectos = loadProjects();
+            const proyectos = currentProjects;
             if (proyectos.length === 0) {
                 alert("No hay datos para exportar.");
                 return;
@@ -662,7 +712,7 @@
         }
 
         function exportarExcel() {
-            const proyectos = loadProjects();
+            const proyectos = currentProjects;
             if (proyectos.length === 0) {
                 alert("No hay datos para exportar.");
                 return;
@@ -715,16 +765,27 @@
             const proyectos = [];
             for (let i = 1; i < lineas.length; i++) {
                 const cols = lineas[i].split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
-                const obj = {};
+                const obj = {
+                    id: generateId(),
+                    fechaCreacion: new Date().toISOString()
+                };
                 headers.forEach((h, idx) => {
                     obj[h] = cols[idx] ? cols[idx].replace(/"/g, "").trim() : "";
                 });
                 proyectos.push(obj);
             }
 
-            saveProjects(proyectos);
-            renderProjects();
-            alert(`Se importaron ${proyectos.length} proyectos correctamente.`);
+            // Guardar todos los proyectos en Firestore
+            let importCount = 0;
+            for (const proyecto of proyectos) {
+                try {
+                    await addDoc(collection(db, "proyectos"), proyecto);
+                    importCount++;
+                } catch (error) {
+                    console.error("Error al importar proyecto:", error);
+                }
+            }
+            alert(`Se importaron ${importCount} proyectos correctamente.`);
         }
 
         // Event listeners for export/import buttons
@@ -757,8 +818,22 @@
             });
         }
 
-        // Initialize render on page load
-        renderProjects();
+        // Inicializar con listener en tiempo real de Firestore
+        onSnapshot(collection(db, "proyectos"), (snapshot) => {
+            currentProjects = [];
+            snapshot.forEach((docSnapshot) => {
+                currentProjects.push({ id: docSnapshot.id, ...docSnapshot.data() });
+            });
+            // Ordenar por fecha de creación descendente
+            currentProjects.sort((a, b) => {
+                const dateA = new Date(a.fechaCreacion || 0);
+                const dateB = new Date(b.fechaCreacion || 0);
+                return dateB - dateA;
+            });
+            renderProjects(currentProjects);
+        }, (error) => {
+            console.error("Error al cargar proyectos desde Firebase:", error);
+        });
     })();
     </script>
 </body>
