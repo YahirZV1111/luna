@@ -564,10 +564,10 @@
                             const t = toEntries(project.defectos_taladro);
 
                             const parts = [];
-                            if (h.length) parts.push(`<div class="text-xs"><strong>Habilitado:</strong> ${escapeHtml(h.map(([k,v])`${k} (${v})`).join('; '))}</div>`);
-                            if (a.length) parts.push(`<div class="text-xs"><strong>Armado:</strong> ${escapeHtml(a.map(([k,v])`${k} (${v})`).join('; '))}</div>`);
-                            if (s.length) parts.push(`<div class="text-xs"><strong>Soldadura:</strong> ${escapeHtml(s.map(([k,v])`${k} (${v})`).join('; '))}</div>`);
-                            if (t.length) parts.push(`<div class="text-xs"><strong>Taladro:</strong> ${escapeHtml(t.map(([k,v])`${k} (${v})`).join('; '))}</div>`);
+                            if (h.length) parts.push(`<div class="text-xs"><strong>Habilitado:</strong> ${escapeHtml(h.map(([k,v]) => `${k} (${v})`).join('; '))}</div>`);
+                            if (a.length) parts.push(`<div class="text-xs"><strong>Armado:</strong> ${escapeHtml(a.map(([k,v]) => `${k} (${v})`).join('; '))}</div>`);
+                            if (s.length) parts.push(`<div class="text-xs"><strong>Soldadura:</strong> ${escapeHtml(s.map(([k,v]) => `${k} (${v})`).join('; '))}</div>`);
+                            if (t.length) parts.push(`<div class="text-xs"><strong>Taladro:</strong> ${escapeHtml(t.map(([k,v]) => `${k} (${v})`).join('; '))}</div>`);
 
                             return parts.join('');
                         })()}
