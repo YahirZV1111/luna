@@ -100,6 +100,18 @@
                 </div>
 
                 <div class="col-span-full md:col-span-1">
+                    <label for="inspector" class="block text-sm font-medium text-gray-700">INSPECTOR</label>
+                    <input type="text" id="inspector" placeholder="Nombre del inspector"
+                           class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+
+                <div class="col-span-full md:col-span-1">
+                    <label for="operador" class="block text-sm font-medium text-gray-700">OPERADOR</label>
+                    <input type="text" id="operador" placeholder="Nombre del operador"
+                           class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+
+                <div class="col-span-full md:col-span-1">
                     <label for="cantidad" class="block text-sm font-medium text-gray-700">CANTIDAD</label>
                     <input type="number" id="cantidad" placeholder="Ej: 10" min="0"
                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
@@ -292,6 +304,8 @@
                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Proyecto</th>
                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Marca</th>
+                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Inspector</th>
+                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Operador</th>
                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cantidad</th>
                         <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Habilitado</th>
                         <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Armado</th>
@@ -491,6 +505,8 @@
                     <td class="px-3 py-3 whitespace-nowrap font-medium text-gray-900">${escapeHtml(project.nombre || '')}</td>
                     <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-500">${escapeHtml(project.descripcion || '')}</td>
                     <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-500">${escapeHtml(project.marca || '')}</td>
+                    <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-500">${escapeHtml(project.inspector || '')}</td>
+                    <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-500">${escapeHtml(project.operador || '')}</td>
                     <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-500">${escapeHtml(String(project.cantidad !== undefined ? project.cantidad : ''))}</td>
                     <td class="px-3 py-3 whitespace-nowrap text-center">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(project.habilitado)} cursor-pointer" 
@@ -639,6 +655,8 @@
                 const nombre = document.getElementById('nombreProyecto').value.trim();
                 const descripcion = document.getElementById('descripcion').value.trim();
                 const marca = document.getElementById('marca').value.trim();
+                        const inspector = document.getElementById('inspector') ? document.getElementById('inspector').value.trim() : '';
+                        const operador = document.getElementById('operador') ? document.getElementById('operador').value.trim() : '';
                 const cantidadVal = document.getElementById('cantidad').value.trim();
                 const cantidad = cantidadVal === '' ? '' : Number(cantidadVal);
                 const habilitado = document.getElementById('habilitado').value;
@@ -669,6 +687,8 @@
                     nombre,
                     descripcion,
                     marca,
+                    inspector,
+                    operador,
                     cantidad,
                     habilitado,
                     armado,
