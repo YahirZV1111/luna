@@ -768,8 +768,16 @@
                 return cp;
             });
 
-            const encabezados = Object.keys(flat[0]).join(",");
-            const filas = flat.map(p => Object.values(p).map(v => `"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+            // Usar un orden fijo de columnas para que las exportaciones no se desordenen
+            const encabezadosOrder = [
+                'id','nombre','descripcion','marca','inspector','operador','cantidad',
+                'habilitado','armado','soldadura','taladros','liberado',
+                'defectos_habilitado','defectos_armado','defectos_soldadura','defectos_taladro',
+                'fechaCreacion','fechaHabilitado','fechaArmado','fechaSoldadura','fechaTaladros','fechaLiberado'
+            ];
+
+            const encabezados = encabezadosOrder.join(",");
+            const filas = flat.map(p => encabezadosOrder.map(h => `"${String(p[h] !== undefined && p[h] !== null ? p[h] : '').replace(/"/g,'""')}"`).join(",")).join("\n");
             const contenido = encabezados + "\n" + filas;
 
             const blob = new Blob([contenido], { type: "text/csv;charset=utf-8;" });
@@ -805,11 +813,18 @@
 
             let xml = `<?xml version="1.0"?>\n<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet">\n<Worksheet ss:Name="Proyectos">\n<Table>`;
 
-            const headers = Object.keys(flat[0]);
-            xml += "<Row>" + headers.map(h => `<Cell><Data ss:Type="String">${h}</Data></Cell>`).join("") + "</Row>";
+            // Usar el mismo orden fijo que en CSV
+            const headersOrder = [
+                'id','nombre','descripcion','marca','inspector','operador','cantidad',
+                'habilitado','armado','soldadura','taladros','liberado',
+                'defectos_habilitado','defectos_armado','defectos_soldadura','defectos_taladro',
+                'fechaCreacion','fechaHabilitado','fechaArmado','fechaSoldadura','fechaTaladros','fechaLiberado'
+            ];
+
+            xml += "<Row>" + headersOrder.map(h => `<Cell><Data ss:Type="String">${h}</Data></Cell>`).join("") + "</Row>";
 
             flat.forEach(p => {
-                xml += "<Row>" + Object.values(p).map(v => `<Cell><Data ss:Type="String">${String(v)}</Data></Cell>`).join("") + "</Row>";
+                xml += "<Row>" + headersOrder.map(h => `<Cell><Data ss:Type="String">${String(p[h] !== undefined && p[h] !== null ? p[h] : '')}</Data></Cell>`).join("") + "</Row>";
             });
 
             xml += "</Table></Worksheet></Workbook>";
