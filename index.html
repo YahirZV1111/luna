@@ -82,37 +82,67 @@
             <form id="projectForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
                 <div class="col-span-full md:col-span-1">
-                    <label for="nombreProyecto" class="block text-sm font-medium text-gray-700">NOMBRE DEL PROYECTO</label>
+                    <div class="flex items-center justify-between">
+                        <label for="nombreProyecto" class="block text-sm font-medium text-gray-700">NOMBRE DEL PROYECTO</label>
+                        <label class="flex items-center gap-1 text-xs text-indigo-600 cursor-pointer" title="Fijar: no borrar al guardar">
+                            <input type="checkbox" id="pin_nombreProyecto" class="pin-checkbox w-3.5 h-3.5 accent-indigo-600"> 📌
+                        </label>
+                    </div>
                     <input type="text" id="nombreProyecto" placeholder="Ej: ARCILLA, OVERLAND" required
                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
                 </div>
 
                 <div class="col-span-full md:col-span-1">
-                    <label for="descripcion" class="block text-sm font-medium text-gray-700">DESCRIPCIÓN</label>
+                    <div class="flex items-center justify-between">
+                        <label for="descripcion" class="block text-sm font-medium text-gray-700">DESCRIPCIÓN</label>
+                        <label class="flex items-center gap-1 text-xs text-indigo-600 cursor-pointer" title="Fijar: no borrar al guardar">
+                            <input type="checkbox" id="pin_descripcion" class="pin-checkbox w-3.5 h-3.5 accent-indigo-600"> 📌
+                        </label>
+                    </div>
                     <input type="text" id="descripcion" placeholder="Ej: viga de 1/1, placa de 1/4" required
                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
                 </div>
 
                 <div class="col-span-full md:col-span-1">
-                    <label for="marca" class="block text-sm font-medium text-gray-700">MARCA</label>
+                    <div class="flex items-center justify-between">
+                        <label for="marca" class="block text-sm font-medium text-gray-700">MARCA</label>
+                        <label class="flex items-center gap-1 text-xs text-indigo-600 cursor-pointer" title="Fijar: no borrar al guardar">
+                            <input type="checkbox" id="pin_marca" class="pin-checkbox w-3.5 h-3.5 accent-indigo-600"> 📌
+                        </label>
+                    </div>
                     <input type="text" id="marca" placeholder="Ej: ov-1, wt3"
                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
                 </div>
 
                 <div class="col-span-full md:col-span-1">
-                    <label for="inspector" class="block text-sm font-medium text-gray-700">INSPECTOR</label>
+                    <div class="flex items-center justify-between">
+                        <label for="inspector" class="block text-sm font-medium text-gray-700">INSPECTOR</label>
+                        <label class="flex items-center gap-1 text-xs text-indigo-600 cursor-pointer" title="Fijar: no borrar al guardar">
+                            <input type="checkbox" id="pin_inspector" class="pin-checkbox w-3.5 h-3.5 accent-indigo-600"> 📌
+                        </label>
+                    </div>
                     <input type="text" id="inspector" placeholder="Nombre del inspector"
                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
                 </div>
 
                 <div class="col-span-full md:col-span-1">
-                    <label for="operador" class="block text-sm font-medium text-gray-700">OPERADOR</label>
+                    <div class="flex items-center justify-between">
+                        <label for="operador" class="block text-sm font-medium text-gray-700">OPERADOR</label>
+                        <label class="flex items-center gap-1 text-xs text-indigo-600 cursor-pointer" title="Fijar: no borrar al guardar">
+                            <input type="checkbox" id="pin_operador" class="pin-checkbox w-3.5 h-3.5 accent-indigo-600"> 📌
+                        </label>
+                    </div>
                     <input type="text" id="operador" placeholder="Nombre del operador"
                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
                 </div>
 
                 <div class="col-span-full md:col-span-1">
-                    <label for="cantidad" class="block text-sm font-medium text-gray-700">CANTIDAD</label>
+                    <div class="flex items-center justify-between">
+                        <label for="cantidad" class="block text-sm font-medium text-gray-700">CANTIDAD</label>
+                        <label class="flex items-center gap-1 text-xs text-indigo-600 cursor-pointer" title="Fijar: no borrar al guardar">
+                            <input type="checkbox" id="pin_cantidad" class="pin-checkbox w-3.5 h-3.5 accent-indigo-600"> 📌
+                        </label>
+                    </div>
                     <input type="number" id="cantidad" placeholder="Ej: 10" min="0"
                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm p-2.5 border focus:border-indigo-500 focus:ring-indigo-500">
                 </div>
@@ -237,29 +267,54 @@
     </select>
 </div>
                 <div>
-    <label for="fechaArmado" class="block text-sm font-medium text-gray-700">Fecha Armado</label>
+    <div class="flex items-center justify-between">
+        <label for="fechaArmado" class="block text-sm font-medium text-gray-700">Fecha Armado</label>
+        <label class="flex items-center gap-1 text-xs text-indigo-600 cursor-pointer" title="Fijar: no borrar al guardar">
+            <input type="checkbox" id="pin_fechaArmado" class="pin-checkbox w-3.5 h-3.5 accent-indigo-600"> 📌
+        </label>
+    </div>
     <input type="date" id="fechaArmado" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
 </div>
 
 <!-- NUEVO: Fecha Habilitado -->
 <div>
-    <label for="fechaHabilitado" class="block text-sm font-medium text-gray-700">Fecha Habilitado</label>
+    <div class="flex items-center justify-between">
+        <label for="fechaHabilitado" class="block text-sm font-medium text-gray-700">Fecha Habilitado</label>
+        <label class="flex items-center gap-1 text-xs text-indigo-600 cursor-pointer" title="Fijar: no borrar al guardar">
+            <input type="checkbox" id="pin_fechaHabilitado" class="pin-checkbox w-3.5 h-3.5 accent-indigo-600"> 📌
+        </label>
+    </div>
     <input type="date" id="fechaHabilitado" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
 </div>
  
 <div>
-    <label for="fechaSoldadura" class="block text-sm font-medium text-gray-700">Fecha Soldadura</label>
+    <div class="flex items-center justify-between">
+        <label for="fechaSoldadura" class="block text-sm font-medium text-gray-700">Fecha Soldadura</label>
+        <label class="flex items-center gap-1 text-xs text-indigo-600 cursor-pointer" title="Fijar: no borrar al guardar">
+            <input type="checkbox" id="pin_fechaSoldadura" class="pin-checkbox w-3.5 h-3.5 accent-indigo-600"> 📌
+        </label>
+    </div>
     <input type="date" id="fechaSoldadura" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
 </div>
 
 <div>
-    <label for="fechaTaladros" class="block text-sm font-medium text-gray-700">Fecha Taladros</label>
+    <div class="flex items-center justify-between">
+        <label for="fechaTaladros" class="block text-sm font-medium text-gray-700">Fecha Taladros</label>
+        <label class="flex items-center gap-1 text-xs text-indigo-600 cursor-pointer" title="Fijar: no borrar al guardar">
+            <input type="checkbox" id="pin_fechaTaladros" class="pin-checkbox w-3.5 h-3.5 accent-indigo-600"> 📌
+        </label>
+    </div>
     <input type="date" id="fechaTaladros" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
 </div>
 
 <!-- NUEVO: Fecha de Liberado -->
 <div>
-    <label for="fechaLiberado" class="block text-sm font-medium text-gray-700">Fecha Liberado</label>
+    <div class="flex items-center justify-between">
+        <label for="fechaLiberado" class="block text-sm font-medium text-gray-700">Fecha Liberado</label>
+        <label class="flex items-center gap-1 text-xs text-indigo-600 cursor-pointer" title="Fijar: no borrar al guardar">
+            <input type="checkbox" id="pin_fechaLiberado" class="pin-checkbox w-3.5 h-3.5 accent-indigo-600"> 📌
+        </label>
+    </div>
     <input type="date" id="fechaLiberado" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
 </div>
                 
@@ -718,7 +773,35 @@
 
                 // Guardar en Firebase
                 await addDoc(collection(db, "proyectos"), newProject);
+
+                // --- LÓGICA DE CAMPOS FIJADOS (PIN) ---
+                // IDs de campos que pueden fijarse
+                const pinFields = [
+                    'nombreProyecto', 'descripcion', 'marca', 'inspector', 'operador', 'cantidad',
+                    'fechaArmado', 'fechaHabilitado', 'fechaSoldadura', 'fechaTaladros', 'fechaLiberado'
+                ];
+                // Guardar valores de campos fijados antes del reset
+                const savedPinValues = {};
+                pinFields.forEach(fieldId => {
+                    const pinCheckbox = document.getElementById('pin_' + fieldId);
+                    if (pinCheckbox && pinCheckbox.checked) {
+                        const fieldEl = document.getElementById(fieldId);
+                        if (fieldEl) savedPinValues[fieldId] = fieldEl.value;
+                    }
+                });
+
                 projectForm.reset();
+
+                // Restaurar valores de campos fijados después del reset
+                Object.entries(savedPinValues).forEach(([fieldId, value]) => {
+                    const fieldEl = document.getElementById(fieldId);
+                    if (fieldEl) fieldEl.value = value;
+                    // Mantener la casilla marcada
+                    const pinCheckbox = document.getElementById('pin_' + fieldId);
+                    if (pinCheckbox) pinCheckbox.checked = true;
+                });
+                // --- FIN LÓGICA PIN ---
+
                 if (errorMessageElement) errorMessageElement.classList.add('hidden');
             });
         }
