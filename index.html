@@ -912,7 +912,7 @@
                 console.log(`📦 Firestore: ${snapshot.size} proyectos encontrados`);
                 currentProjects = [];
                 snapshot.forEach((docSnapshot) => {
-                    currentProjects.push({ id: docSnapshot.id, ...docSnapshot.data() });
+                    currentProjects.push({ ...docSnapshot.data(), id: docSnapshot.id });
                 });
                 // Ordenar por fecha de creación descendente
                 currentProjects.sort((a, b) => {
